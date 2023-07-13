@@ -16,6 +16,7 @@ function cityToGeo(geoCall) {
             console.log(lat);
             lon = data[0].lon.toString();
             console.log(lon);
+            geoToData();
         });
 }
 
@@ -33,7 +34,5 @@ function geoToData(dataCall) {
 sumbittedCity.addEventListener("click", function(event) {
     event.preventDefault();
     cityName = document.getElementById("cityName").value;
-    // console.log(cityName);
     cityToGeo();
-    geoToData();
 });
