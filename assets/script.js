@@ -70,8 +70,8 @@ function geoToData(dataCall) {
         .then(function (data) {
             console.log(data);
             cityDateWeather.textContent = cityName + " (" + currentDate + ")";
-            todayTemp.textContent = "Temp: " + data.current.temp;
-            todayWind.textContent = "Wind: " + data.current.wind_speed + " MPH";
+            todayTemp.textContent = "Temp: " + Math.floor(data.current.temp) + "\xB0F";
+            todayWind.textContent = "Wind: " + Math.floor(data.current.wind_speed) + " MPH";
             todayHumidity.textContent = "Humidity: " + data.current.humidity + "%";
             for (i = 0; i < fiveDayForecast.length; i++) {
                 fiveDayForecast[i].temp = data.daily[(i + 1)].temp.max;
@@ -80,14 +80,23 @@ function geoToData(dataCall) {
                 var cardDiv = document.createElement("div");
                 var cardBody = document.createElement("div");
                 var h5El = document.createElement("h5");
+                var p1El = document.createElement("p");
+                var p2El = document.createElement("p");
+                var p3El = document.createElement("p");
                 cardDiv.classList.add("card");
                 cardBody.classList.add("card-body");
                 h5El.classList.add("card-title");
                 h5El.textContent = fiveDayForecast[i].date;
+                p1El.textContent = "Temp: " + Math.floor(fiveDayForecast[i].temp) + "\xB0F";
+                p2El.textContent = "Wind: " + Math.floor(fiveDayForecast[i].wind) + " MPH";
+                p3El.textContent = "Humidity: " + fiveDayForecast[i].humidity + "%";
                 cardDiv.setAttribute("style", "width: 11rem");
                 fiveDayEl.appendChild(cardDiv);
                 cardDiv.appendChild(cardBody);
                 cardBody.appendChild(h5El);
+                cardBody.appendChild(p1El);
+                cardBody.appendChild(p2El);
+                cardBody.appendChild(p3El);
             }
             console.log(fiveDayForecast);
         });
