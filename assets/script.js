@@ -3,6 +3,8 @@ var lat = "";
 var lon = "";
 
 var sumbittedCity = document.getElementById("submitCity");
+var cities = [];
+var searchHistory = document.getElementById("searchHistory");
 var cityDateWeather = document.getElementById("cityDateWeather");
 var currentDate = dayjs().format("MM/DD/YYYY");
 var datePlusOne = dayjs().add(1, "day").format("MM/DD/YYYY");
@@ -76,6 +78,9 @@ function geoToData(dataCall) {
             todayTemp.textContent = "Temp: " + Math.floor(data.current.temp) + "\xB0F";
             todayWind.textContent = "Wind: " + Math.floor(data.current.wind_speed) + " MPH";
             todayHumidity.textContent = "Humidity: " + data.current.humidity + "%";
+            if (fiveDayEl.children.length > 0) {
+                fiveDayEl.replaceChildren();
+            }
             for (i = 0; i < fiveDayForecast.length; i++) {
                 fiveDayForecast[i].temp = data.daily[(i + 1)].temp.max;
                 fiveDayForecast[i].wind = data.daily[(i + 1)].wind_speed;
@@ -87,7 +92,7 @@ function geoToData(dataCall) {
                 var p2El = document.createElement("p");
                 var p3El = document.createElement("p");
                 var futureIcon = document.createElement("img");
-                cardDiv.classList.add("card");
+                cardDiv.classList.add("card", "bg-info");
                 cardBody.classList.add("card-body");
                 h5El.classList.add("card-title");
                 h5El.textContent = fiveDayForecast[i].date;
@@ -111,5 +116,13 @@ function geoToData(dataCall) {
 sumbittedCity.addEventListener("click", function(event) {
     event.preventDefault();
     cityName = document.getElementById("cityName").value;
+    cities.push(cityName);
+    console.log(cities);
+    localStorage.setItem("City Name: ", cities);
+    var cityButton = document.createElement("button");
+    cityButton.textContent = cityName;
+    cityButton.setAttribute("class", "btn btn-info mt-3");
+    cityButton.setAttribute("id", "submitCity");
+    searchHistory.appendChild(cityButton);
     cityToGeo();
 });
