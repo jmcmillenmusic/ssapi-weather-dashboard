@@ -110,19 +110,29 @@ function geoToData(dataCall) {
                 h5El.appendChild(futureIcon);
             }
             console.log(fiveDayForecast);
+            document.getElementById("cityName").value = "";
         });
 }
 
 sumbittedCity.addEventListener("click", function(event) {
     event.preventDefault();
+    var cities = JSON.parse(localStorage.getItem("allCities")) || [];
     cityName = document.getElementById("cityName").value;
     cities.push(cityName);
     console.log(cities);
-    localStorage.setItem("City Name: ", cities);
-    var cityButton = document.createElement("button");
-    cityButton.textContent = cityName;
-    cityButton.setAttribute("class", "btn btn-info mt-3");
-    cityButton.setAttribute("id", "submitCity");
-    searchHistory.appendChild(cityButton);
+    localStorage.setItem("allCities", JSON.stringify(cities));
+    var newCityButton = document.createElement("button");
+    newCityButton.textContent = cityName;
+    newCityButton.setAttribute("class", "btn btn-info mt-3");
+    newCityButton.setAttribute("id", "historyCity");
+    searchHistory.appendChild(newCityButton);
     cityToGeo();
 });
+
+// searchHistory.addEventListener("click", function(event) {
+//     if (event.target && event.target.nodeName == "BUTTON") {
+//         event.preventDefault();
+//         cityName = this.textContent;
+//         cityToGeo();
+//     }
+// });
