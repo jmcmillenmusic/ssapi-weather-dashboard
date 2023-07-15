@@ -1,21 +1,20 @@
+// Initial critical variables to be used throughout the script
 var cityName = "";
 var lat = "";
 var lon = "";
 
-var sumbittedCity = document.getElementById("submitCity");
+// Array that stores all cities searched by the user
 var cities = [];
-var searchHistory = document.getElementById("searchHistory");
-var cityDateWeather = document.getElementById("cityDateWeather");
+
+// Variables to store today's date and the dates of the next 5 days (starting tomorrow)
 var currentDate = dayjs().format("MM/DD/YYYY");
 var datePlusOne = dayjs().add(1, "day").format("MM/DD/YYYY");
 var datePlusTwo = dayjs().add(2, "day").format("MM/DD/YYYY");
 var datePlusThree = dayjs().add(3, "day").format("MM/DD/YYYY");
 var datePlusFour = dayjs().add(4, "day").format("MM/DD/YYYY");
 var datePlusFive = dayjs().add(5, "day").format("MM/DD/YYYY");
-var todayTemp = document.getElementById("todayTemp");
-var todayWind = document.getElementById("todayWind");
-var todayHumidity = document.getElementById("todayHumidity");
-var fiveDayEl = document.getElementById("fiveDay");
+
+// Object array that stores the date, temperature, wind speed, and humidity for the next 5 days (starting tomorrow)
 var fiveDayForecast = [
     {
         date: datePlusOne,
@@ -49,6 +48,16 @@ var fiveDayForecast = [
     },
 ];
 
+// Variables that reference HTML elements by their IDs to be used in later functions
+var sumbittedCity = document.getElementById("submitCity");
+var searchHistory = document.getElementById("searchHistory");
+var cityDateWeather = document.getElementById("cityDateWeather");
+var todayTemp = document.getElementById("todayTemp");
+var todayWind = document.getElementById("todayWind");
+var todayHumidity = document.getElementById("todayHumidity");
+var fiveDayEl = document.getElementById("fiveDay");
+
+// This function makes a call to the OpenWeatherMap GeoCoding API while passing in the user-submitted city and returns the latitude and longitude of said city. Then, it calls the next function.
 function cityToGeo(geoCall) {
     var geoCall = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
     fetch(geoCall)
@@ -56,13 +65,13 @@ function cityToGeo(geoCall) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
             lat = data[0].lat.toString();
             lon = data[0].lon.toString();
             geoToData();
         });
 }
 
+// This function makes a call to the OpenWeatherMap OneCall API while passing in the latitude and longitude of the user-submitted city and returns the date, current weather conditions, temperature in Fahrenheit, wind speed in miles per hour, and humidity. This process is repeated for each of the next 5 days as well (starting tomorrow), dynamically creating cards to store and display this information. The input field is then cleared and replaced with placeholder text ("Austin").
 function geoToData(dataCall) {
     var dataCall = "https://api.openweathermap.org/data/3.0/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=fec5efe77b667f6d2583b855e054f8db";
     fetch(dataCall)
@@ -70,7 +79,6 @@ function geoToData(dataCall) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
             var weatherIcon = document.createElement("img");
             weatherIcon.setAttribute("src", "http://openweathermap.org/img/w/" + data.current.weather[0].icon + ".png");
             cityDateWeather.textContent = cityName + " (" + currentDate + ")";
@@ -109,20 +117,31 @@ function geoToData(dataCall) {
                 cardBody.appendChild(p3El);
                 h5El.appendChild(futureIcon);
             }
-            console.log(fiveDayForecast);
+            document.getElementById("cityName").value = "";
         });
 }
 
+// This button listens for the user-submitted city, stores the city name in localStorage, creates a button with that city's name on it, places it below the Search button, and initializes the first OpenWeatherMap API call.
 sumbittedCity.addEventListener("click", function(event) {
     event.preventDefault();
+    var cities = JSON.parse(localStorage.getItem("allCities")) || [];
     cityName = document.getElementById("cityName").value;
     cities.push(cityName);
-    console.log(cities);
-    localStorage.setItem("City Name: ", cities);
-    var cityButton = document.createElement("button");
-    cityButton.textContent = cityName;
-    cityButton.setAttribute("class", "btn btn-info mt-3");
-    cityButton.setAttribute("id", "submitCity");
-    searchHistory.appendChild(cityButton);
+    localStorage.setItem("allCities", JSON.stringify(cities));
+    var newCityButton = document.createElement("button");
+    newCityButton.textContent = cityName;
+    newCityButton.setAttribute("class", "btn btn-info mt-3");
+    newCityButton.setAttribute("id", "historyCity");
+    searchHistory.appendChild(newCityButton);
     cityToGeo();
+});
+
+// This button listens for the name of the city written on it, passes that value into the cityName variable, and initializes the first OpenWeatherMap API call.
+searchHistory.addEventListener("click", function(event) {
+    if (event.target && event.target.nodeName == "BUTTON") {
+        event.preventDefault();
+        var oldCityButton = document.getElementById("historyCity");
+        cityName = oldCityButton.textContent;
+        cityToGeo();
+    }
 });
