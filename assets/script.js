@@ -57,9 +57,15 @@ var todayWind = document.getElementById("todayWind");
 var todayHumidity = document.getElementById("todayHumidity");
 var fiveDayEl = document.getElementById("fiveDay");
 
+// Clears localStorage when the page gets refreshed
+window.onbeforeunload = () => {
+    localStorage.clear();
+};
+
 // This function makes a call to the OpenWeatherMap GeoCoding API while passing in the user-submitted city and returns the latitude and longitude of said city. Then, it calls the next function.
 function cityToGeo(geoCall) {
     var geoCall = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
+    // console.log("🚀 ~ cityToGeo ~ cityName:", cityName);
     fetch(geoCall)
         .then(function (response) {
             return response.json();
@@ -131,17 +137,35 @@ sumbittedCity.addEventListener("click", function(event) {
     var newCityButton = document.createElement("button");
     newCityButton.textContent = cityName;
     newCityButton.setAttribute("class", "btn btn-info mt-3");
-    newCityButton.setAttribute("id", "historyCity");
+    newCityButton.setAttribute("id", cityName);
     searchHistory.appendChild(newCityButton);
+    // console.log(cityName);
+    // console.log(cities);
     cityToGeo();
 });
 
 // This button listens for the name of the city written on it, passes that value into the cityName variable, and initializes the first OpenWeatherMap API call.
+// This section is currently not working as intended.
 searchHistory.addEventListener("click", function(event) {
     if (event.target && event.target.nodeName == "BUTTON") {
         event.preventDefault();
-        var oldCityButton = document.getElementById("historyCity");
-        cityName = oldCityButton.textContent;
-        cityToGeo();
+        // document.getElementById('cityName').value = event.target.id;
+        // var cityName = event.target.id;
+        // console.log("🚀 ~ cityName:", cityName);
+        // var oldCityName = document.querySelector('.form-control');
+        // oldCityName = cityName;
+        // console.log("🚀 ~ oldCityName:", oldCityName);
+        // var cities = JSON.parse(localStorage.getItem("allCities"));
+        // console.log("🚀 ~ cities:", cities);
+        // navigator.clipboard.writeText(cityName);
+        // var oldCityName = navigator.clipboard.readText();
+        // console.log("🚀 ~ oldCityName:", oldCityName);
+        // var oldForm = document.getElementsByClassName('form-control');
+        // if (oldForm) {
+        //     oldForm.innerText = oldCityName;
+        // } else {
+        //     console.error('Cannot find element:', oldForm);
+        // }
+        // cityToGeo();
     }
 });
