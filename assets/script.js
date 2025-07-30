@@ -64,7 +64,7 @@ window.onbeforeunload = () => {
 
 // This function makes a call to the OpenWeatherMap GeoCoding API while passing in the user-submitted city and returns the latitude and longitude of said city. Then, it calls the next function.
 function cityToGeo(geoCall) {
-    var geoCall = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
+    var geoCall = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
     // console.log("🚀 ~ cityToGeo ~ cityName:", cityName);
     fetch(geoCall)
         .then(function (response) {
