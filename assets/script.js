@@ -64,8 +64,8 @@ window.onbeforeunload = () => {
 
 // This function makes a call to the OpenWeatherMap GeoCoding API while passing in the user-submitted city and returns the latitude and longitude of said city. Then, it calls the next function.
 function cityToGeo(geoCall) {
-    var geoCall = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
-    // console.log("🚀 ~ cityToGeo ~ cityName:", cityName);
+    var geoCall = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
+    console.log("🚀 ~ cityToGeo ~ cityName:", cityName);
     fetch(geoCall)
         .then(function (response) {
             return response.json();
@@ -149,23 +149,42 @@ sumbittedCity.addEventListener("click", function(event) {
 searchHistory.addEventListener("click", function(event) {
     if (event.target && event.target.nodeName == "BUTTON") {
         event.preventDefault();
-        // document.getElementById('cityName').value = event.target.id;
-        // var cityName = event.target.id;
-        // console.log("🚀 ~ cityName:", cityName);
-        // var oldCityName = document.querySelector('.form-control');
-        // oldCityName = cityName;
-        // console.log("🚀 ~ oldCityName:", oldCityName);
-        // var cities = JSON.parse(localStorage.getItem("allCities"));
-        // console.log("🚀 ~ cities:", cities);
-        // navigator.clipboard.writeText(cityName);
-        // var oldCityName = navigator.clipboard.readText();
-        // console.log("🚀 ~ oldCityName:", oldCityName);
-        // var oldForm = document.getElementsByClassName('form-control');
-        // if (oldForm) {
-        //     oldForm.innerText = oldCityName;
-        // } else {
-        //     console.error('Cannot find element:', oldForm);
-        // }
-        // cityToGeo();
+        // var oldCityName = event.target.id;
+        // var cityName = oldCityName;
+        // var oldForm = document.querySelector('input');
+        // console.log("🚀 ~ oldForm:", oldForm)
+        // document.getElementById("cityName").value = cityName;
+        // cityToGeo(cityName);
+        // navigator.clipboard.writeText(cityName)
+        //     .then(() => {
+        //         console.log('Text copied to clipboard');
+        //         return navigator.clipboard.readText();
+        //     })
+        //     .then(() => {
+        //         oldForm.textContent = cityName;
+        //         console.log("🚀 ~ cityName:", cityName)
+        //         console.log('Text pasted from clipboard');
+        //     })
+        //     .finally(() => {
+        //         cityToGeo();
+        //     })
+        //     .catch(error => {
+        //         console.error('Failed: ', error);
+        //     })
     }
 });
+
+// document.getElementById('oldCityName').value = event.target.id;
+// var oldoldCityName = document.querySelector('.form-control');
+// oldoldCityName = oldCityName;
+// console.log("🚀 ~ oldoldCityName:", oldoldCityName);
+// var cities = JSON.parse(localStorage.getItem("allCities"));
+// console.log("🚀 ~ cities:", cities);
+// navigator.clipboard.writeText(oldCityName);
+// var oldoldCityName = navigator.clipboard.readText();
+// console.log("🚀 ~ oldoldCityName:", oldoldCityName);
+// if (oldForm) {
+//     oldForm.innerText = oldoldCityName;
+// } else {
+//     console.error('Cannot find element:', oldForm);
+// }
