@@ -7,7 +7,7 @@ As I delve into the world of server-side application programming interfaces (API
 ## Installation
 
 You can access this page with the following URL:
-https://jmcmillenmusic.github.io/ssapi-weather-dashboard/
+[https://jmcmillenmusic.github.io/ssapi-weather-dashboard/](https://jmcmillenmusic.github.io/ssapi-weather-dashboard/)
 
 ## Usage
 
