@@ -86,7 +86,7 @@ function geoToData(dataCall) {
         })
         .then(function (data) {
             var weatherIcon = document.createElement("img");
-            weatherIcon.setAttribute("src", "http://openweathermap.org/img/w/" + data.current.weather[0].icon + ".png");
+            weatherIcon.setAttribute("src", "https://openweathermap.org/img/w/" + data.current.weather[0].icon + ".png");
             cityDateWeather.textContent = cityName + " (" + currentDate + ")";
             cityDateWeather.appendChild(weatherIcon);
             todayTemp.textContent = "Temp: " + Math.floor(data.current.temp) + "\xB0F";
@@ -110,7 +110,7 @@ function geoToData(dataCall) {
                 cardBody.classList.add("card-body");
                 h5El.classList.add("card-title");
                 h5El.textContent = fiveDayForecast[i].date;
-                futureIcon.setAttribute("src", "http://openweathermap.org/img/w/" + data.daily[(i + 1)].weather[0].icon + ".png");
+                futureIcon.setAttribute("src", "https://openweathermap.org/img/w/" + data.daily[(i + 1)].weather[0].icon + ".png");
                 p1El.textContent = "Temp: " + Math.floor(fiveDayForecast[i].temp) + "\xB0F";
                 p2El.textContent = "Wind: " + Math.floor(fiveDayForecast[i].wind) + " MPH";
                 p3El.textContent = "Humidity: " + fiveDayForecast[i].humidity + "%";
