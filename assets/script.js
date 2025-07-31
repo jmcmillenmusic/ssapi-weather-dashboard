@@ -49,7 +49,7 @@ var fiveDayForecast = [
 ];
 
 // Variables that reference HTML elements by their IDs to be used in later functions
-var sumbittedCity = document.getElementById("submitCity");
+var submittedCity = document.getElementById("submitCity");
 var searchHistory = document.getElementById("searchHistory");
 var cityDateWeather = document.getElementById("cityDateWeather");
 var todayTemp = document.getElementById("todayTemp");
@@ -65,7 +65,6 @@ window.onbeforeunload = () => {
 // This function makes a call to the OpenWeatherMap GeoCoding API while passing in the user-submitted city and returns the latitude and longitude of said city. Then, it calls the next function.
 function cityToGeo(geoCall) {
     var geoCall = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
-    console.log("🚀 ~ cityToGeo ~ cityName:", cityName);
     fetch(geoCall)
         .then(function (response) {
             return response.json();
@@ -128,7 +127,7 @@ function geoToData(dataCall) {
 }
 
 // This button listens for the user-submitted city, stores the city name in localStorage, creates a button with that city's name on it, places it below the Search button, and initializes the first OpenWeatherMap API call.
-sumbittedCity.addEventListener("click", function(event) {
+submittedCity.addEventListener("click", function(event) {
     event.preventDefault();
     var cities = JSON.parse(localStorage.getItem("allCities")) || [];
     cityName = document.getElementById("cityName").value;
@@ -139,52 +138,26 @@ sumbittedCity.addEventListener("click", function(event) {
     newCityButton.setAttribute("class", "btn btn-info mt-3");
     newCityButton.setAttribute("id", cityName);
     searchHistory.appendChild(newCityButton);
-    // console.log(cityName);
-    // console.log(cities);
     cityToGeo();
 });
 
-// This button listens for the name of the city written on it, passes that value into the cityName variable, and initializes the first OpenWeatherMap API call.
-// This section is currently not working as intended.
+// This button cpoies the name of the city written on it, pastes it into the input field, and initializes the first OpenWeatherMap API call.
 searchHistory.addEventListener("click", function(event) {
     if (event.target && event.target.nodeName == "BUTTON") {
         event.preventDefault();
-        // var oldCityName = event.target.id;
-        // var cityName = oldCityName;
-        // var oldForm = document.querySelector('input');
-        // console.log("🚀 ~ oldForm:", oldForm)
-        // document.getElementById("cityName").value = cityName;
-        // cityToGeo(cityName);
-        // navigator.clipboard.writeText(cityName)
-        //     .then(() => {
-        //         console.log('Text copied to clipboard');
-        //         return navigator.clipboard.readText();
-        //     })
-        //     .then(() => {
-        //         oldForm.textContent = cityName;
-        //         console.log("🚀 ~ cityName:", cityName)
-        //         console.log('Text pasted from clipboard');
-        //     })
-        //     .finally(() => {
-        //         cityToGeo();
-        //     })
-        //     .catch(error => {
-        //         console.error('Failed: ', error);
-        //     })
+        var oldCityName = event.target.id;
+        navigator.clipboard.writeText(oldCityName)
+            .then(() => {
+                navigator.clipboard.readText();
+            })
+            .finally(() => {
+                document.getElementById('cityName').focus();
+                document.getElementById('cityName').value = oldCityName;
+                document.getElementById('submitCity').focus();
+                document.getElementById('submitCity').click();
+            })
+            .catch(error => {
+                console.error('Failed: ', error);
+            })
     }
 });
-
-// document.getElementById('oldCityName').value = event.target.id;
-// var oldoldCityName = document.querySelector('.form-control');
-// oldoldCityName = oldCityName;
-// console.log("🚀 ~ oldoldCityName:", oldoldCityName);
-// var cities = JSON.parse(localStorage.getItem("allCities"));
-// console.log("🚀 ~ cities:", cities);
-// navigator.clipboard.writeText(oldCityName);
-// var oldoldCityName = navigator.clipboard.readText();
-// console.log("🚀 ~ oldoldCityName:", oldoldCityName);
-// if (oldForm) {
-//     oldForm.innerText = oldoldCityName;
-// } else {
-//     console.error('Cannot find element:', oldForm);
-// }
