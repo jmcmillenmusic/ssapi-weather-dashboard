@@ -1,3 +1,7 @@
+// import { apiKey } from "../../server.js";
+// const apiKey = process.env.API_KEY;
+// console.log(`My API Key: ${apiKey}`);
+
 // Initial critical variables to be used throughout the script
 var cityName = "";
 var lat = "";
@@ -64,7 +68,7 @@ window.onbeforeunload = () => {
 
 // This function makes a call to the OpenWeatherMap GeoCoding API while passing in the user-submitted city and returns the latitude and longitude of said city. Then, it calls the next function.
 function cityToGeo(geoCall) {
-    var geoCall = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=fec5efe77b667f6d2583b855e054f8db";
+    var geoCall = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=fec5efe77b667f6d2583b855e054f8db`;
     fetch(geoCall)
         .then(function (response) {
             return response.json();
@@ -78,7 +82,7 @@ function cityToGeo(geoCall) {
 
 // This function makes a call to the OpenWeatherMap OneCall API while passing in the latitude and longitude of the user-submitted city and returns the date, current weather conditions, temperature in Fahrenheit, wind speed in miles per hour, and humidity. This process is repeated for each of the next 5 days as well (starting tomorrow), dynamically creating cards to store and display this information. The input field is then cleared and replaced with placeholder text ("Austin").
 function geoToData(dataCall) {
-    var dataCall = "https://api.openweathermap.org/data/3.0/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&appid=fec5efe77b667f6d2583b855e054f8db";
+    var dataCall = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=fec5efe77b667f6d2583b855e054f8db`;
     fetch(dataCall)
         .then(function (response) {
             return response.json();
