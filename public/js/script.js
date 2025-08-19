@@ -1,7 +1,3 @@
-// import { apiKey } from "../../server.js";
-// const apiKey = process.env.API_KEY;
-// console.log(`My API Key: ${apiKey}`);
-
 // Initial critical variables to be used throughout the script
 var cityName = "";
 var lat = "";
