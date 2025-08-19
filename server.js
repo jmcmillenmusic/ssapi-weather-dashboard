@@ -43,36 +43,11 @@ const datePlusFive = now.add(5, 'day').format('MM/DD/YYYY');
 
 // Object array that stores the date, temperature, wind speed, and humidity for the next 5 days (starting tomorrow)
 var fiveDayForecast = [
-    {
-        date: datePlusOne,
-        temp: '',
-        wind: '',
-        humidity: ''
-    },
-    {
-        date: datePlusTwo,
-        temp: '',
-        wind: '',
-        humidity: ''
-    },
-    {
-        date: datePlusThree,
-        temp: '',
-        wind: '',
-        humidity: ''
-    },
-    {
-        date: datePlusFour,
-        temp: '',
-        wind: '',
-        humidity: ''
-    },
-    {
-        date: datePlusFive,
-        temp: '',
-        wind: '',
-        humidity: ''
-    },
+    datePlusOne,
+    datePlusTwo,
+    datePlusThree,
+    datePlusFour,
+    datePlusFive
 ];
 
 let weather = new OpenWeatherAPI({
@@ -85,7 +60,24 @@ weather.getCurrent().then(data => {
     console.log("🚀 ~ data:", data)
     // City name is not getting passed in just yet.
     console.log(`Austin (${currentDate})`);
-    console.log(`Temp: ${Math.round(data.weather.temp.cur)}\u00B0F`);
-    console.log(`Wind: ${Math.round(data.weather.wind.speed)} MPH`);
+    console.log(`Temp: ${Math.floor(data.weather.temp.cur)}\u00B0F`);
+    console.log(`Wind: ${Math.floor(data.weather.wind.speed)} MPH`);
     console.log(`Humidity: ${data.weather.humidity}%`);
+});
+weather.getDailyForecast().then(data => {
+    // console.log("🚀 ~ data:", data)
+    // console.log(`${fiveDayForecast[0]}`);
+    // console.log(`Temp: ${Math.floor(data[0].weather.temp.max)}\u00B0F`);
+    // console.log(`Wind: ${Math.floor(data[0].weather.wind.speed)} MPH`);
+    // console.log(`Humidity: ${data[0].weather.humidity}%`);
+    let forecastTable = [];
+    data.forEach((w, d) => {
+        let newEntry = {};
+        newEntry.day = fiveDayForecast[d];
+        newEntry.temp = `Temp: ${Math.floor(w.weather.temp.max)}\u00B0F`;
+        newEntry.wind = `Wind: ${Math.floor(w.weather.wind.speed)} MPH`;
+        newEntry.humidity = `Humidity: ${w.weather.humidity}%`
+        forecastTable.push(newEntry);
+    })
+    console.table(forecastTable);
 });
