@@ -3,7 +3,8 @@
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "node": "^24.6.0"
+    "node": "^24.6.0",
+    "openweather-api-node": "^3.1.5"
   },
   "name": "ssapi-weather-dashboard",
   "description": "As I delve into the world of server-side application programming interfaces (APIs), I've discovered that there are a plethora of APIs for anything and everything. Developers have been using these to gather all types of data, and it's important that other developers know how to retrieve and (most importantly) interpret said data in a way that people can understand. One way that I've accomplished this is to construct a Weather Dashboard to showcase my ability to retrieve and interpret weather data for any given city from the OpenWeatherMap API.",

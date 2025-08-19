@@ -1,6 +1,12 @@
-// Requires Express and DayJS node package
+// Requires Express, DayJS, OpenWeatherAPI, and Dotenv node packages
 const express = require('express');
 const dayjs = require('dayjs');
+const { OpenWeatherAPI } = require('openweather-api-node');
+const dotenv = require('dotenv');
+
+// Allows the retrieval of API key from .env file
+dotenv.config();
+apiKey = process.env.API_KEY;
 
 // Creates the app
 const app = express();
@@ -13,6 +19,7 @@ app.listen(3000, () =>
 // Serve all files in the Public folder after listening
 app.use(express.static('public'));
 
+// This may no longer be necessary thanks to the Openweather API Node Package.
 app.post('/api', (request, response) => {
     console.log('Here is where the request goes.');
 });
@@ -33,12 +40,6 @@ const datePlusTwo = now.add(2, 'day').format('MM/DD/YYYY');
 const datePlusThree = now.add(3, 'day').format('MM/DD/YYYY');
 const datePlusFour = now.add(4, 'day').format('MM/DD/YYYY');
 const datePlusFive = now.add(5, 'day').format('MM/DD/YYYY');
-console.log("🚀 ~ currentDate:", currentDate)
-console.log("🚀 ~ datePlusOne:", datePlusOne)
-console.log("🚀 ~ datePlusTwo:", datePlusTwo)
-console.log("🚀 ~ datePlusThree:", datePlusThree)
-console.log("🚀 ~ datePlusFour:", datePlusFour)
-console.log("🚀 ~ datePlusFive:", datePlusFive)
 
 // Object array that stores the date, temperature, wind speed, and humidity for the next 5 days (starting tomorrow)
 var fiveDayForecast = [
@@ -73,22 +74,18 @@ var fiveDayForecast = [
         humidity: ''
     },
 ];
-console.log("🚀 ~ fiveDayForecast:", fiveDayForecast)
 
-// function cityToGeo(geoCall) {
-//     var geoCall = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=fec5efe77b667f6d2583b855e054f8db`;
-//     fetch(geoCall)
-//         .then(function (response) {
-//             console.log("🚀 ~ cityToGeo ~ response:", response)
-//             return response.json();
-//         })
-//         .then(function (data) {
-//             console.log("🚀 ~ cityToGeo ~ data:", data)
-//             lat = data[0].lat.toString();
-//             console.log("🚀 ~ cityToGeo ~ lat:", lat)
-//             lon = data[0].lon.toString();
-//             console.log("🚀 ~ cityToGeo ~ lon:", lon)
-//             geoToData();
-//         });
-// }
-// cityToGeo();
+let weather = new OpenWeatherAPI({
+    key: apiKey,
+    locationName: 'Austin',
+    units: 'imperial'
+});
+weather.getCurrent().then(data => {
+    // console.log(`Current temperature in Austin is: ${data.weather.temp.cur}\u00B0F`);
+    console.log("🚀 ~ data:", data)
+    // City name is not getting passed in just yet.
+    console.log(`Austin (${currentDate})`);
+    console.log(`Temp: ${Math.round(data.weather.temp.cur)}\u00B0F`);
+    console.log(`Wind: ${Math.round(data.weather.wind.speed)} MPH`);
+    console.log(`Humidity: ${data.weather.humidity}%`);
+});
