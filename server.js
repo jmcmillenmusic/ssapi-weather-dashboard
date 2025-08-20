@@ -19,9 +19,16 @@ app.listen(3000, () =>
 // Serve all files in the Public folder after listening
 app.use(express.static('public'));
 
+// Enables the parsing of form data (i.e. a user-submitted city)
+app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+
 // This may no longer be necessary thanks to the Openweather API Node Package.
 app.post('/api', (request, response) => {
-    console.log('Here is where the request goes.');
+    console.log("🚀 ~ request:", request)
+    const cityName = request.body;
+    console.log(`** City Name: ${cityName} **`);
+    response.send('City submitted successfully!');
 });
 
 // Initial critical variables to be used throughout the script
