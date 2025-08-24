@@ -23,17 +23,45 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// This may no longer be necessary thanks to the Openweather API Node Package.
+// Makes a POST request to the API to get weather data for the user-submitted city
 app.post('/api', (request, response) => {
-    // console.log("🚀 ~ request:", request)
     const cityName = request.body.message;
     console.log(`** City Name: ${cityName} **`);
-    // response.send("City submitted successfully!");
     const serverResponse = 'City submitted successfully!';
     response.json({ message: serverResponse });
+
+    let weather = new OpenWeatherAPI({
+        key: apiKey,
+        locationName: `${cityName}`,
+        units: 'imperial'
+    });
+    weather.getCurrent().then(data => {
+        console.log(`${cityName} (${currentDate})`);
+        console.log(`Temp: ${Math.floor(data.weather.temp.cur)}\u00B0F`);
+        console.log(`Wind: ${Math.floor(data.weather.wind.speed)} MPH`);
+        console.log(`Humidity: ${data.weather.humidity}%`);
+    });
+    weather.getDailyForecast().then(data => {
+        // console.log("🚀 ~ data:", data)
+        // console.log(`${fiveDayForecast[0]}`);
+        // console.log(`Temp: ${Math.floor(data[0].weather.temp.max)}\u00B0F`);
+        // console.log(`Wind: ${Math.floor(data[0].weather.wind.speed)} MPH`);
+        // console.log(`Humidity: ${data[0].weather.humidity}%`);
+        let forecastTable = [];
+        data.forEach((w, d) => {
+            let newEntry = {};
+            newEntry.day = fiveDayForecast[d];
+            newEntry.temp = `Temp: ${Math.floor(w.weather.temp.max)}\u00B0F`;
+            newEntry.wind = `Wind: ${Math.floor(w.weather.wind.speed)} MPH`;
+            newEntry.humidity = `Humidity: ${w.weather.humidity}%`
+            forecastTable.push(newEntry);
+        })
+        console.table(forecastTable);
+    });
 });
 
 // Initial critical variables to be used throughout the script
+// Not needed due to OpenWeather API Node Package
 var cityName = '';
 var lat = '';
 var lon = '';
@@ -58,35 +86,3 @@ var fiveDayForecast = [
     datePlusFour,
     datePlusFive
 ];
-
-let weather = new OpenWeatherAPI({
-    key: apiKey,
-    locationName: 'Austin',
-    units: 'imperial'
-});
-weather.getCurrent().then(data => {
-    // console.log(`Current temperature in Austin is: ${data.weather.temp.cur}\u00B0F`);
-    // console.log("🚀 ~ data:", data)
-    // City name is not getting passed in just yet.
-    console.log(`Austin (${currentDate})`);
-    console.log(`Temp: ${Math.floor(data.weather.temp.cur)}\u00B0F`);
-    console.log(`Wind: ${Math.floor(data.weather.wind.speed)} MPH`);
-    console.log(`Humidity: ${data.weather.humidity}%`);
-});
-weather.getDailyForecast().then(data => {
-    // console.log("🚀 ~ data:", data)
-    // console.log(`${fiveDayForecast[0]}`);
-    // console.log(`Temp: ${Math.floor(data[0].weather.temp.max)}\u00B0F`);
-    // console.log(`Wind: ${Math.floor(data[0].weather.wind.speed)} MPH`);
-    // console.log(`Humidity: ${data[0].weather.humidity}%`);
-    let forecastTable = [];
-    data.forEach((w, d) => {
-        let newEntry = {};
-        newEntry.day = fiveDayForecast[d];
-        newEntry.temp = `Temp: ${Math.floor(w.weather.temp.max)}\u00B0F`;
-        newEntry.wind = `Wind: ${Math.floor(w.weather.wind.speed)} MPH`;
-        newEntry.humidity = `Humidity: ${w.weather.humidity}%`
-        forecastTable.push(newEntry);
-    })
-    console.table(forecastTable);
-});

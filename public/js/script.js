@@ -162,7 +162,7 @@ window.onbeforeunload = () => {
 //     }
 // });
 
-// This will check to see if a user-submitted city gets recognized.
+// Sends the user-submitted city as a stringified message in JSON to /api
 submittedCity.addEventListener("click", async function(event) {
     event.preventDefault();
     const data = document.getElementById("cityName").value;
