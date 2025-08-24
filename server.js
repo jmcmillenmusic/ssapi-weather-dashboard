@@ -21,14 +21,16 @@ app.use(express.static('public'));
 
 // Enables the parsing of form data (i.e. a user-submitted city)
 app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
+app.use(express.json());
 
 // This may no longer be necessary thanks to the Openweather API Node Package.
 app.post('/api', (request, response) => {
-    console.log("🚀 ~ request:", request)
-    const cityName = request.body;
+    // console.log("🚀 ~ request:", request)
+    const cityName = request.body.message;
     console.log(`** City Name: ${cityName} **`);
-    response.send('City submitted successfully!');
+    // response.send("City submitted successfully!");
+    const serverResponse = 'City submitted successfully!';
+    response.json({ message: serverResponse });
 });
 
 // Initial critical variables to be used throughout the script
@@ -64,7 +66,7 @@ let weather = new OpenWeatherAPI({
 });
 weather.getCurrent().then(data => {
     // console.log(`Current temperature in Austin is: ${data.weather.temp.cur}\u00B0F`);
-    console.log("🚀 ~ data:", data)
+    // console.log("🚀 ~ data:", data)
     // City name is not getting passed in just yet.
     console.log(`Austin (${currentDate})`);
     console.log(`Temp: ${Math.floor(data.weather.temp.cur)}\u00B0F`);

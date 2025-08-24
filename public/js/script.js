@@ -163,28 +163,21 @@ window.onbeforeunload = () => {
 // });
 
 // This will check to see if a user-submitted city gets recognized.
-submittedCity.addEventListener('click', async function(event) {
+submittedCity.addEventListener("click", async function(event) {
     event.preventDefault();
-    // cityName = document.getElementById("cityName").value;
-    // const formData = new FormData(cityName);
-    // const data = Object.fromEntries(formData.entries());
-    const data = document.getElementById('cityName').value;
-    console.log("🚀 ~ data:", data)
+    const data = document.getElementById("cityName").value;
     try {
-        const response = await fetch('/api', {
-            method: 'POST',
-            // headers: {
-            //     'Content-Type': 'application/x-www-form-urlencoded'
-            // },
-            // body: JSON.stringify(data)
-            body: data
+        const response = await fetch("/api", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: data })
         })
-        console.log("🚀 ~ data times two:", data)
-        // .then(function (data) {
-        //     console.log(data);
-        // })
-        const result = await response.text();
-        console.log(`Response: ${result}`);
+        // console.log("🚀 ~ data:", data)
+        // console.log("🚀 ~ response:", response)
+        const result = response.json();
+        // console.log(`Response: ${result}`);
     } catch (error) {
         console.error(`Error submitting form: ${error}`);
     }
