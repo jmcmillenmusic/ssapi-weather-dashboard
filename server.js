@@ -23,6 +23,15 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// GET request for sending the weather data to script.js
+app.get('/api', (request, response) => {
+    response.json({
+        // allCities: JSON.parse(localStorage.getItem('allCities'))
+        date: currentDate,
+        // temp: Math.floor(data.weather.temp.cur)
+    })
+});
+
 // Makes a POST request to the API to get weather data for the user-submitted city
 app.post('/api', (request, response) => {
     const cityName = request.body.message;
@@ -36,38 +45,41 @@ app.post('/api', (request, response) => {
         units: 'imperial'
     });
     weather.getCurrent().then(data => {
-        console.log(`${cityName} (${currentDate})`);
-        console.log(`Temp: ${Math.floor(data.weather.temp.cur)}\u00B0F`);
-        console.log(`Wind: ${Math.floor(data.weather.wind.speed)} MPH`);
-        console.log(`Humidity: ${data.weather.humidity}%`);
+        let currentWeather = {
+            city: cityName,
+            date: currentDate,
+            temp: `${Math.floor(data.weather.temp.cur)}\u00B0F`,
+            wind: `${Math.floor(data.weather.wind.speed)} MPH`,
+            humidity: `${data.weather.humidity}%`,
+        };
+        console.log("🚀 ~ currentWeather:", currentWeather)
     });
     weather.getDailyForecast().then(data => {
-        // console.log("🚀 ~ data:", data)
-        // console.log(`${fiveDayForecast[0]}`);
-        // console.log(`Temp: ${Math.floor(data[0].weather.temp.max)}\u00B0F`);
-        // console.log(`Wind: ${Math.floor(data[0].weather.wind.speed)} MPH`);
-        // console.log(`Humidity: ${data[0].weather.humidity}%`);
-        let forecastTable = [];
         data.forEach((w, d) => {
-            let newEntry = {};
-            newEntry.day = fiveDayForecast[d];
-            newEntry.temp = `Temp: ${Math.floor(w.weather.temp.max)}\u00B0F`;
-            newEntry.wind = `Wind: ${Math.floor(w.weather.wind.speed)} MPH`;
-            newEntry.humidity = `Humidity: ${w.weather.humidity}%`
-            forecastTable.push(newEntry);
+            if (d < 5) {
+                let newEntry = {};
+                newEntry.day = fiveDayForecast[d];
+                newEntry.temp = `Temp: ${Math.floor(w.weather.temp.max)}\u00B0F`;
+                newEntry.wind = `Wind: ${Math.floor(w.weather.wind.speed)} MPH`;
+                newEntry.humidity = `Humidity: ${w.weather.humidity}%`
+                localForecast.push(newEntry);
+            }
         })
-        console.table(forecastTable);
+        console.log("🚀 ~ localForecast:", localForecast);
+        console.table(localForecast);
     });
+    // weatherDataEntry = {
+    //     currentWeather: currentWeather,
+    //     localForecast: localForecast
+    // };
+    // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
+    // allWeatherData.push(weatherDataEntry);
+    // console.log("🚀 ~ allWeatherData:", allWeatherData)
 });
 
-// Initial critical variables to be used throughout the script
-// Not needed due to OpenWeather API Node Package
-var cityName = '';
-var lat = '';
-var lon = '';
-
-// Array that stores all cities searched by the user
-var cities = [];
+let allWeatherData = [];
+let currentWeather = {};
+let localForecast = [];
 
 // Initialize DayJS and get the dates for today and the next 5 days
 const now = dayjs();
@@ -86,3 +98,12 @@ var fiveDayForecast = [
     datePlusFour,
     datePlusFive
 ];
+
+// Initial critical variables to be used throughout the script
+// Not needed due to OpenWeather API Node Package
+// var cityName = '';
+// var lat = '';
+// var lon = '';
+
+// Array that stores all cities searched by the user
+// var cities = [];

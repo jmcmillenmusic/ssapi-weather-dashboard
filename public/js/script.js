@@ -126,7 +126,7 @@ window.onbeforeunload = () => {
 //         });
 // }
 
-// This button listens for the user-submitted city, stores the city name in localStorage, creates a button with that city's name on it, places it below the Search button, and initializes the first OpenWeatherMap API call.
+
 // submittedCity.addEventListener("click", function(event) {
 //     event.preventDefault();
 //     var cities = JSON.parse(localStorage.getItem("allCities")) || [];
@@ -162,12 +162,27 @@ window.onbeforeunload = () => {
 //     }
 // });
 
-// Sends the user-submitted city as a stringified message in JSON to /api
+/* 
+    - Stores the city name in localStorage
+    - Creates a button with that city's name
+    - Adds the button and city name to search history
+    - Sends the user-submitted city as a stringified message in JSON to /api
+*/
 submittedCity.addEventListener("click", async function(event) {
     event.preventDefault();
-    const data = document.getElementById("cityName").value;
+    var cities = JSON.parse(localStorage.getItem("allCities")) || [];
+    var data = document.getElementById("cityName").value;
+    cities.push(data);
+    localStorage.setItem("allCities", JSON.stringify(cities));
+    var newCityButton = document.createElement('button');
+    newCityButton.textContent = data;
+    newCityButton.setAttribute('class', 'btn btn-info mt-3');
+    newCityButton.setAttribute('id', data);
+    searchHistory.appendChild(newCityButton);
+    // API call
     try {
-        const response = await fetch("/api", {
+        // POST request
+        const postResponse = await fetch("/api", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -175,9 +190,15 @@ submittedCity.addEventListener("click", async function(event) {
             body: JSON.stringify({ message: data })
         })
         // console.log("🚀 ~ data:", data)
-        // console.log("🚀 ~ response:", response)
-        const result = response.json();
-        // console.log(`Response: ${result}`);
+        // console.log("🚀 ~ postResponse:", postResponse)
+        const result = await postResponse.json();
+        // console.log(`postResponse: ${result}`);
+
+        // GET request
+        const getResponse = await fetch("/api");
+        console.log("🚀 ~ getResponse:", getResponse);
+        const returnedData = await getResponse.json();
+        console.log("🚀 ~ returnedData:", returnedData);
     } catch (error) {
         console.error(`Error submitting form: ${error}`);
     }
