@@ -26,8 +26,7 @@ app.use(express.json());
 // GET request for sending the weather data to script.js
 app.get('/api', (request, response) => {
     response.json({
-        weatherDataEntry: weatherDataEntry,
-        allWeatherData: allWeatherData
+        weatherDataEntry: weatherDataEntry
     })
 });
 
@@ -50,16 +49,12 @@ app.post('/api', (request, response) => {
         let currentWeather = {
             city: cityName,
             date: currentDate,
+            iconUrl: data.weather.icon.url,
             temp: `${Math.floor(data.weather.temp.cur)}\u00B0F`,
             wind: `${Math.floor(data.weather.wind.speed)} MPH`,
             humidity: `${data.weather.humidity}%`,
         }
-        // console.log("🚀 ~ currentWeather:", currentWeather)
         weatherDataEntry.push(currentWeather);
-        // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
-        // .then(() => {
-
-        // })
     });
     weather.getDailyForecast().then(data => {
         data.forEach((w, d) => {
@@ -69,24 +64,13 @@ app.post('/api', (request, response) => {
                 newEntry.temp = `Temp: ${Math.floor(w.weather.temp.max)}\u00B0F`;
                 newEntry.wind = `Wind: ${Math.floor(w.weather.wind.speed)} MPH`;
                 newEntry.humidity = `Humidity: ${w.weather.humidity}%`
+                newEntry.iconUrl = w.weather.icon.url;
                 localForecast.push(newEntry);
             }
         })
-        // console.log("🚀 ~ localForecast:", localForecast)
-        // console.table(localForecast)
         weatherDataEntry.push(localForecast);
-        // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
-        // .then(() => {
-
-        // })
         allWeatherData.push(weatherDataEntry);
-        // console.log("🚀 ~ allWeatherData:", allWeatherData)
-        // .then(() => {
-
-        // }) 
     });
-    
-    // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
 });
 
 let localForecast = [];
@@ -110,12 +94,3 @@ var fiveDayForecast = [
     datePlusFour,
     datePlusFive
 ];
-
-// Initial critical variables to be used throughout the script
-// Not needed due to OpenWeather API Node Package
-// var cityName = '';
-// var lat = '';
-// var lon = '';
-
-// Array that stores all cities searched by the user
-// var cities = [];
