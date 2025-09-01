@@ -162,6 +162,11 @@ window.onbeforeunload = () => {
 //     }
 // });
 
+// Function for delaying the GET request to ensure that it has the data
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /* 
     - Stores the city name in localStorage
     - Creates a button with that city's name
@@ -189,14 +194,12 @@ submittedCity.addEventListener("click", async function(event) {
             },
             body: JSON.stringify({ message: data })
         })
-        // console.log("🚀 ~ data:", data)
-        // console.log("🚀 ~ postResponse:", postResponse)
         const result = await postResponse.json();
-        // console.log(`postResponse: ${result}`);
 
         // GET request
+        await delay(1000);
         const getResponse = await fetch("/api");
-        console.log("🚀 ~ getResponse:", getResponse);
+        // console.log("🚀 ~ getResponse:", getResponse);
         const returnedData = await getResponse.json();
         console.log("🚀 ~ returnedData:", returnedData);
     } catch (error) {

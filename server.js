@@ -26,9 +26,8 @@ app.use(express.json());
 // GET request for sending the weather data to script.js
 app.get('/api', (request, response) => {
     response.json({
-        // allCities: JSON.parse(localStorage.getItem('allCities'))
-        date: currentDate,
-        // temp: Math.floor(data.weather.temp.cur)
+        weatherDataEntry: weatherDataEntry,
+        allWeatherData: allWeatherData
     })
 });
 
@@ -38,6 +37,9 @@ app.post('/api', (request, response) => {
     console.log(`** City Name: ${cityName} **`);
     const serverResponse = 'City submitted successfully!';
     response.json({ message: serverResponse });
+
+    localForecast.length = 0;
+    weatherDataEntry.length = 0;
 
     let weather = new OpenWeatherAPI({
         key: apiKey,
@@ -51,8 +53,13 @@ app.post('/api', (request, response) => {
             temp: `${Math.floor(data.weather.temp.cur)}\u00B0F`,
             wind: `${Math.floor(data.weather.wind.speed)} MPH`,
             humidity: `${data.weather.humidity}%`,
-        };
-        console.log("🚀 ~ currentWeather:", currentWeather)
+        }
+        // console.log("🚀 ~ currentWeather:", currentWeather)
+        weatherDataEntry.push(currentWeather);
+        // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
+        // .then(() => {
+
+        // })
     });
     weather.getDailyForecast().then(data => {
         data.forEach((w, d) => {
@@ -65,21 +72,26 @@ app.post('/api', (request, response) => {
                 localForecast.push(newEntry);
             }
         })
-        console.log("🚀 ~ localForecast:", localForecast);
-        console.table(localForecast);
+        // console.log("🚀 ~ localForecast:", localForecast)
+        // console.table(localForecast)
+        weatherDataEntry.push(localForecast);
+        // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
+        // .then(() => {
+
+        // })
+        allWeatherData.push(weatherDataEntry);
+        // console.log("🚀 ~ allWeatherData:", allWeatherData)
+        // .then(() => {
+
+        // }) 
     });
-    // weatherDataEntry = {
-    //     currentWeather: currentWeather,
-    //     localForecast: localForecast
-    // };
+    
     // console.log("🚀 ~ weatherDataEntry:", weatherDataEntry)
-    // allWeatherData.push(weatherDataEntry);
-    // console.log("🚀 ~ allWeatherData:", allWeatherData)
 });
 
-let allWeatherData = [];
-let currentWeather = {};
 let localForecast = [];
+let weatherDataEntry = [];
+let allWeatherData = [];
 
 // Initialize DayJS and get the dates for today and the next 5 days
 const now = dayjs();
