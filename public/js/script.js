@@ -1,11 +1,3 @@
-// Initial critical variables to be used throughout the script
-var cityName = "";
-// var lat = "";
-// var lon = "";
-
-// Array that stores all cities searched by the user
-var cities = [];
-
 // Variables to store today's date and the dates of the next 5 days (starting tomorrow)
 var currentDate = dayjs().format("MM/DD/YYYY");
 var datePlusOne = dayjs().add(1, "day").format("MM/DD/YYYY");
@@ -63,25 +55,25 @@ window.onbeforeunload = () => {
 };
 
 // This button copies the name of the city written on it, pastes it into the input field, and initializes the first OpenWeatherMap API call.
-// searchHistory.addEventListener("click", function(event) {
-//     if (event.target && event.target.nodeName == "BUTTON") {
-//         event.preventDefault();
-//         var oldCityName = event.target.id;
-//         navigator.clipboard.writeText(oldCityName)
-//             .then(() => {
-//                 navigator.clipboard.readText();
-//             })
-//             .finally(() => {
-//                 document.getElementById('cityName').focus();
-//                 document.getElementById('cityName').value = oldCityName;
-//                 document.getElementById('submitCity').focus();
-//                 document.getElementById('submitCity').click();
-//             })
-//             .catch(error => {
-//                 console.error('Failed: ', error);
-//             })
-//     }
-// });
+searchHistory.addEventListener("click", function(event) {
+    if (event.target && event.target.nodeName == "BUTTON") {
+        event.preventDefault();
+        var oldCityName = event.target.id;
+        navigator.clipboard.writeText(oldCityName)
+            .then(() => {
+                navigator.clipboard.readText();
+            })
+            .finally(() => {
+                document.getElementById('cityName').focus();
+                document.getElementById('cityName').value = oldCityName;
+                submittedCity.focus();
+                submittedCity.click();
+            })
+            .catch(error => {
+                console.error('Failed: ', error);
+            })
+    }
+});
 
 // Runs the GET request and displays the weather data for the user-submitted city
 function geoToData() {
@@ -123,10 +115,11 @@ function geoToData() {
                 var p3El = document.createElement("p");
                 var futureIcon = document.createElement("img");
 
-                // Adds CSS classes to card elements
+                // Adds CSS classes and attributes to card elements
                 cardDiv.classList.add("card", "bg-info");
                 cardBody.classList.add("card-body");
                 h5El.classList.add("card-title");
+                cardDiv.setAttribute("style", "width: 11rem");
 
                 // Displays 5-day forecast data
                 h5El.textContent = data.weatherDataEntry[1][i].day;
@@ -135,8 +128,7 @@ function geoToData() {
                 p2El.textContent = data.weatherDataEntry[1][i].wind;
                 p3El.textContent = data.weatherDataEntry[1][i].humidity;
 
-                // Sets card style and attaches all elements
-                cardDiv.setAttribute("style", "width: 11rem");
+                // Attaches all elements
                 fiveDayEl.appendChild(cardDiv);
                 cardDiv.appendChild(cardBody);
                 cardBody.appendChild(h5El);
@@ -156,10 +148,10 @@ function delay(ms) {
 }
 
 /* 
-    - Stores the city name in localStorage
-    - Creates a button with that city's name
-    - Adds the button and city name to search history
-    - Sends the user-submitted city as a stringified message in JSON to /api
+- Stores the city name in localStorage
+- Creates a button with that city's name
+- Adds the button and city name to search history
+- Sends the user-submitted city as a stringified message in JSON to /api
 */
 submittedCity.addEventListener("click", async function(event) {
     event.preventDefault();
@@ -167,6 +159,7 @@ submittedCity.addEventListener("click", async function(event) {
     var data = document.getElementById("cityName").value;
     cities.push(data);
     localStorage.setItem("allCities", JSON.stringify(cities));
+    console.log("🚀 ~ localStorage:", localStorage)
     var newCityButton = document.createElement('button');
     newCityButton.textContent = data;
     newCityButton.setAttribute('class', 'btn btn-info mt-3');
@@ -186,10 +179,6 @@ submittedCity.addEventListener("click", async function(event) {
 
         // GET request
         await delay(1000);
-        const getResponse = await fetch("/api");
-        // console.log("🚀 ~ getResponse:", getResponse);
-        const returnedData = await getResponse.json();
-        console.log("🚀 ~ returnedData:", returnedData);
         geoToData();
     } catch (error) {
         console.error(`Error submitting form: ${error}`);
