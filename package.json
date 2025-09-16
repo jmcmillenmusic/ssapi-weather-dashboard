@@ -10,6 +10,9 @@
   "name": "ssapi-weather-dashboard",
   "description": "As I delve into the world of server-side application programming interfaces (APIs), I've discovered that there are a plethora of APIs for anything and everything. Developers have been using these to gather all types of data, and it's important that other developers know how to retrieve and (most importantly) interpret said data in a way that people can understand. One way that I've accomplished this is to construct a Weather Dashboard to showcase my ability to retrieve and interpret weather data for any given city from the OpenWeatherMap API.",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=0.10.3 <19"
+  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
