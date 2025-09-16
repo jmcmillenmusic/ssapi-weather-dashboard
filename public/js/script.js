@@ -159,7 +159,6 @@ submittedCity.addEventListener("click", async function(event) {
     var data = document.getElementById("cityName").value;
     cities.push(data);
     localStorage.setItem("allCities", JSON.stringify(cities));
-    console.log("🚀 ~ localStorage:", localStorage)
     var newCityButton = document.createElement('button');
     newCityButton.textContent = data;
     newCityButton.setAttribute('class', 'btn btn-info mt-3');
